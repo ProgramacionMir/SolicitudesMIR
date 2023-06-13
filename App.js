@@ -5,8 +5,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useState, useRef } from 'react';
 
+//email
+import emailjs from '@emailjs/browser'
+
 //datepicker 
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { template } from '@babel/core';
 
 //import {Picker} from '@react-native-picker/picker';
 //import { BlurView } from '@react-native-community/blur';
@@ -89,13 +93,27 @@ const HomeScreen = ({navigation  }) => {
  );
 }
 
-function DetailsScreen() {
+function ServiceScreen() {
 const [Value, onValueChange] = useState ("Selecciona un servicio")
  const [descripcion, onChangedescripcion] =useState ('');
  const [date, setdate] = useState(new Date(1598051730000));
  const [mode, setmode] = useState('date');
  const [show, setshow] = useState(false);
 
+ const emailcontent = useRef();
+
+ const sendEmail = (e) => {
+  e.preventDefault();
+
+  emailjs.sendForm('service_d936nws', 'template_4giacxs', emailcontent.current, 'Kst069UH2IrEbXZJ_')
+  .then((result) => {
+    console.log(result.text);
+  },
+  (err) => {
+    console.log(error.text);
+  });
+}
+ 
 
  const onchange = (ev, selectdDate) =>  {
    const currentDate = selectdDate;
@@ -151,6 +169,37 @@ const [Value, onValueChange] = useState ("Selecciona un servicio")
 
 
 class Admin extends React.Component{
+  sucess(){
+    const TemplateParams ={
+      Name: 'hola',
+      Msg: ' saludos queremos informarle que su solicitud fue aprovada'
+    }
+
+    emailjs.send('service_d936nws', 'template_4giacxs', TemplateParams, 'Kst069UH2IrEbXZJ_')
+    .then((result) => {
+      console.log(result.text);
+    },
+    (err) => {
+      console.log(error.text);
+    });
+  }
+
+  declined(){
+    const TemplateParams ={
+      Name: 'hola',
+      Msg: ' saludos queremos informarle que su solicitud fue rechazada'
+    }
+
+    emailjs.send('service_d936nws', 'template_4giacxs', TemplateParams, 'Kst069UH2IrEbXZJ_')
+    .then((result) => {
+      console.log(result.text);
+    },
+    (err) => {
+      console.log(error.text);
+    });
+  }
+
+
  constructor(props) {
    super (props)
 
@@ -223,8 +272,8 @@ class Admin extends React.Component{
              <Text style={Admvielist.listext}>fecha: {item.name}</Text>
            </View>
            <View>
-             <Pressable style ={Admvielist.btnsuceed}><Text>aprovar</Text></Pressable>
-             <Pressable style ={Admvielist.btncancel}><Text>Rechazar</Text></Pressable>
+             <Pressable style ={Admvielist.btnsuceed} onPress={() => this.sucess()}><Text>aprovar</Text></Pressable>
+             <Pressable style ={Admvielist.btncancel} onPress={() => this.declined()}><Text>Rechazar</Text></Pressable>
            </View>          
          </View>
          </>
@@ -242,7 +291,7 @@ function App() {
    <NavigationContainer>
      <Stack.Navigator initialRouteName="Home">
        <Stack.Screen name="Home" component={HomeScreen} />
-       <Stack.Screen name="Solicitudes" component={DetailsScreen} />
+       <Stack.Screen name="Solicitudes" component={ServiceScreen} />
        <Stack.Screen name="Admin" component={Admin} />
      </Stack.Navigator>
    </NavigationContainer>
