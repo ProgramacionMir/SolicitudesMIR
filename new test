@@ -1,0 +1,626 @@
+import React, { useState, useRef } from 'react';
+import {ActivityIndicator,Image, Dimensions, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View,FlatList, Alert, Button } from 'react-native';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+//email
+import emailjs from '@emailjs/browser'
+
+//datepicker 
+import DateTimePicker from '@react-native-community/datetimepicker';
+import * as Device from 'expo-device';
+
+//picker
+import {Picker} from '@react-native-picker/picker';
+
+//checkbox
+import Checkbox from 'expo-checkbox';
+
+//form
+import { useForm } from 'react-hook-form';
+import { useCallback } from 'react';
+import { useEffect } from 'react';
+
+
+//import {Picker} from '@react-native-picker/picker';
+//import { BlurView } from '@react-native-community/blur';
+
+const HomeScreen = ({navigation  }) => {
+ const [user, onChangeuser] = useState('');
+ const [pass, onChangepass] = useState('');
+
+ try {
+  const auth = () => {
+    try {
+      if( user == "Direccion" && pass == "Mir1234"){
+        if (dev == "windows"){
+          navigation.navigate('Admin')
+        }
+        else{
+          return (
+            Alert.alert('Se ha iniciado sesion correctamente', [
+              {text: 'ir',  onPress: () => navigation.navigate('Admin')},
+            ])
+          )
+        }
+      }
+      else{
+        if (dev == "windows"){
+          
+        }
+        else{
+          return (
+            Alert.alert('Se ha iniciado sesion correctamente', [
+              {text: 'ir',  onPress: () => navigation.navigate('Admin')},
+            ])
+          )
+        }
+      }
+    }
+    catch(err){
+
+    }
+  }
+ }
+ catch(err){
+
+ }
+ 
+ return (
+   <View style={stylos.centeredView}>
+    <View style={stylos.centeredView}>
+         <View style={stylos.modalView}>
+         <Text style={stylos.modalTitle}>Bienvenidos</Text>
+         <Text style={stylos.modalText}>inicia sesion</Text>
+           <TextInput 
+             style={stylos.input}
+             onChangeText={onChangeuser}
+             value={user}
+             placeholder='Ingrese su usuario'
+             placeholderTextColor= "#00000050"
+
+           />
+           <TextInput
+             style = {stylos.input}
+             onChangeText={onChangepass}
+             value={pass}
+             textContentType='password'
+             secureTextEntry={true}
+             placeholder='Ingrese su contraseña'
+             placeholderTextColor= "#00000050"
+           />
+           
+           <Pressable
+             style={[stylos.button, stylos.buttonClose]}
+             onPress={() => navigation.navigate('Solicitudes')}>
+             <Text style={stylos.textStyle}>iniciar secion</Text>
+           </Pressable>
+         </View>
+       </View>
+   </View>
+ );
+}
+
+
+
+
+//servicios 
+
+function ServiceScreen() {
+  const [isChecked, setChecked] = useState(false);
+  const [isEnabled, setEnabled] = useState(false);
+ const [Value, onValueChange] = useState ("Selecciona un servicio");
+ const [descripcion, onChangedescripcion] =useState ('');
+ const [date, setdate] = useState(new Date(1598051730000));
+ const [mode, setmode] = useState('date');
+ const [show, setshow] = useState(false);
+ const [mydate, setDate] = useState(new Date());
+ const [displaymode, setMode] = useState('date');
+ const changeSelectedDate = (event, selectedDate) => {
+  const currentDate = selectedDate || mydate;
+  setDate(currentDate);
+};
+
+const [selectedService, setSelectedService] = useState();
+const [secondService, setSecondService] = useState();
+
+//form
+const {registro, handlesubmit, setvalue} = useForm();
+
+ //Onsubmit
+const onSubmit = useCallback(FormData => {
+  console.log(FormData);
+}, []);
+
+ //changefield
+const onchangefield = useCallback(
+  name => text => {
+    setvalue(name, text);
+  },
+  []
+);
+
+ //useEffect
+useEffect(() => {
+  registro('nombre');
+  registro('Solicitud');
+  registro('Solicitud2');
+  registro('Dia');
+  registro('Numero');
+  registro('Summary');
+  registro('serviciotec')
+})
+
+//email sender function
+const emailcontent = useRef();
+ const sendEmail = (e) => {
+  e.preventDefault();
+
+  emailjs.sendForm('service_d936nws', 'template_4giacxs', emailcontent.current, 'YShdUdyE45EYrUY4X')
+  .then((result) => {
+    console.log(result.text);
+    emailcontent.current.reset();
+  },
+  (err) => {
+    console.log(error.text);
+  });
+}
+
+
+// device detector 
+var dev = Device.osName;
+
+//retrieve name from db 
+var nombre = 'christoph';
+
+
+if (dev != 'Windows'){
+    return(
+      <>   
+      <View style={teacher.mainview} ref={emailcontent} onSubmit = {sendEmail()}>
+        <View style = {teacher.requestecard}>
+          <View style = {teacher.container}>
+            <View style ={teacher.requestecardHeader}>
+            <TextInput style = {teacher.textbox}placeholder='Que desea solicitar' onChangeText={onchangefield('Solicitud')
+            ></TextInput>
+            </View>
+  
+            <View style = {teacher.requestecardbody}>
+            <Text> Para cuando desea lo solicitado</Text>
+           
+            <View style = {teacher.dateselector}>
+              <View style = {teacher.dateselectorDay}>
+                <TextInput name="date" style = {teacher.dateDay} placeholder='Dia' onChangeText={onchangefield('Dia')></TextInput>
+              </View>
+              <View style = {teacher.dateselectorNum}>
+                <TextInput name = 'numero' style= {teacher.dateNum} keyboardType='numeric' placeholder='# numero' onChangeText={onchangefield('Numero')></TextInput>
+              </View>
+            </View>
+           
+            <TextInput motivos style = {teacher.textbox} placeholder='motivos de la solicitud' onChangeText={onchangefield('summary')}></TextInput>
+            <Text> desea soporte tecnico</Text>
+            <Checkbox
+            style={styles.checkbox}
+            name = 'serviciotecnico'
+            value={isChecked}
+            onValueChange={setChecked}
+            color={isChecked ? '#4630EB' : undefined}
+            />
+            <Text style = {teacher.nombre}>{nombre}</Text>       
+            </View>
+            <View style = {teacher.requestecardButtoncontainer}>
+              <Pressable style = {teacher.submitbtn}
+               onPress={handlesubmit(onSubmit)}
+               >
+                <Text>Enviar</Text>
+              </Pressable>
+              <Pressable><Text> Tiene problemas con la plataforma?</Text></Pressable>
+            </View>
+          </View>
+        </View>
+      </View>
+      </>
+    );
+  }
+  else{
+    return(
+      <>
+         <TextInput></TextInput>
+         <TextInput></TextInput>
+         <TextInput></TextInput>
+         <TextInput></TextInput>
+         <TextInput></TextInput>
+      </>
+    );
+  }
+}
+
+
+
+class Admin extends React.Component{
+  sucess(){
+    const TemplateParams ={
+      Name: 'hola',
+      Msg: ' saludos queremos informarle que su solicitud fue aprovada'
+    }
+
+    emailjs.send('service_d936nws', 'template_4giacxs', TemplateParams, 'Kst069UH2IrEbXZJ_')
+    .then((result) => {
+      console.log(result.text);
+    },
+    (err) => {
+      console.log(error.text);
+    });
+  }
+
+  declined(){
+    const TemplateParams ={
+      Name: 'hola',
+      Msg: ' saludos queremos informarle que su solicitud fue rechazada'
+    }
+
+    emailjs.send('service_d936nws', 'template_4giacxs', TemplateParams, 'Kst069UH2IrEbXZJ_')
+    .then((result) => {
+      console.log(result.text);
+    },
+    (err) => {
+      console.log(error.text);
+    });
+  }
+
+
+ constructor(props) {
+   super (props)
+
+   this.state = {
+     loadding: false,
+     //nombre: [],
+     solicitudes: [],
+     //dia: [],
+     //informacion:[],
+     url: 'https://pokeapi.co/api/v2/pokemon/'
+   }
+ }
+ componentDidMount () {
+   this.getsolicitudes();
+ }
+
+ getsolicitudes = () => {
+   this.setState({loadding: true})
+   fetch(this.state.url).then(res =>  res.json()).then(res => {
+     this.setState({
+       solicitudes: res.results,
+       url:res.next,
+       loadding:false
+     })
+     .catch (err => {
+       return (
+         <>
+          <View>
+           <Text>no se pudo parsear los datos del api </Text>
+           <Text>contacte con el tecnico y envie este mensaje de error</Text>
+           <Text>a41-001 {err}</Text>
+          </View>
+         </>
+       )
+     })
+   }).catch (err => {
+       return (
+         <>
+          <View>
+           <Text>no se pudo hacer fetch a los datos del api </Text>
+           <Text>contacte con el tecnico y envie este mensaje de error</Text>
+           <Text>a41-010 {err}</Text>
+          </View>
+         </>
+       )
+     })
+ }
+
+ render(){
+   if(this.state.loadding){
+     return(
+       <View style = {LoaddingScreen.View} >
+         <Text>Descargando datos de la nube espere un momento</Text>
+         <ActivityIndicator size="large" color="#9D1039" hidesWhenStopped = "true" />
+       </View>
+     );
+   }
+   
+   return (
+     <View style ={Admvielist.centeredView}>
+       <Text>Lista de solicitudes</Text>
+       <FlatList style ={Admvielist.list}
+       data = {this.state.solicitudes}
+       renderItem = {
+         ({item}) => <>
+         <View style = {Admvielist.card}>
+           <View>
+             <Text style={Admvielist.listext}>nombre: Luz divina</Text>
+             <Text style={Admvielist.listext}>Solicitud: {item.name}</Text>
+             <Text style={Admvielist.listext}>fecha: {item.name}</Text>
+           </View>
+           <View>
+             <Pressable style ={Admvielist.btnsuceed} onPress={() => this.sucess()}><Text>aprovar</Text></Pressable>
+             <Pressable style ={Admvielist.btncancel} onPress={() => this.declined()}><Text>Rechazar</Text></Pressable>
+           </View>          
+         </View>
+         </>
+       }/>
+     </View>
+   )
+ }
+}
+
+
+const Stack = createNativeStackNavigator();
+
+function App() {
+ return (
+   <NavigationContainer>
+     <Stack.Navigator initialRouteName="Solicitudes">
+     <Stack.Screen name="Solicitudes" component={ServiceScreen} />
+       <Stack.Screen name="Home" component={HomeScreen} />
+       <Stack.Screen name="Adm" component={Admin} />
+     </Stack.Navigator>
+   </NavigationContainer>
+ );
+}
+
+const stylos = StyleSheet.create({
+ centeredView: {
+   flex: 1,
+   justifyContent: 'center',
+   alignItems: 'center',
+ },
+
+ modalView: {
+   backgroundColor: 'white',
+   borderRadius: 20,
+   padding: 70,
+   alignItems: 'center',
+   shadowColor: '#000',
+   
+   shadowOffset: {
+     width: 0,
+     height: 10,
+   },
+
+   shadowOpacity: 0.25,
+   shadowRadius: 10,
+   elevation: 3,
+ },
+ button: {
+   borderRadius: 20,
+   padding: 10,
+   elevation: 2,
+ },
+
+ buttonOpen: {
+   backgroundColor: '#ED339AF9',
+   fontFamily: "Times New Roman"
+
+ },
+ buttonClose: {
+   marginTop:15,
+   backgroundColor: '#21F325',
+   fontFamily: "Times New Roman"
+
+ },
+ textStyle: {
+   color: 'white',
+   fontWeight: 'bold',
+   textAlign: 'center',
+   fontFamily: "Times New Roman"
+
+ },
+ modalText: {
+   marginBottom: 15,
+   textAlign: 'center',
+   fontSize: 18,
+   fontStyle: 'italic',
+   fontFamily: "Times New Roman"
+
+ },
+ modalTitle: {
+   marginBottom: 30,
+   marginTop: -30,
+   textAlign: 'center',
+   fontSize: 30,
+   textShadowOffset:{
+     width: 0,
+     height: 2
+   },
+   textShadowColor: '#00000050',
+   textShadowRadius: 2,
+   fontFamily: "Times New Roman"
+ },
+ input:{
+   marginBottom:10,
+   borderRadius: 10,
+   textAlign: 'center',
+   color: 'black',
+   fontSize: 20,
+ }
+});
+
+
+const teacher = StyleSheet.create({
+ mainview:{
+   flex: 1, 
+   alignItems: 'center', 
+   justifyContent: 'center',
+   backgroundColor: 'cyan'
+ },
+
+ requestecard:{
+   backgroundColor: 'white',
+   borderRadius: 20,
+   padding: 70,
+   alignItems: 'center',
+   shadowColor: '#000',
+   
+   shadowOffset: {
+     width: 0,
+     height: 10,
+   },
+
+   shadowOpacity: 0.25,
+   shadowRadius: 10,
+   elevation: 3,
+   
+ },
+
+ requestecardHeader: {
+   alignItems: 'center',
+
+   
+ },
+ title:{
+   marginTop:10,
+
+   fontSize: 20,
+   fontFamily: "Times New Roman",
+   marginBottom:10
+ },
+
+ text:{
+   fontSize: 20,
+   fontFamily: "Times New Roman",
+   marginBottom: 40
+ },
+
+ requestecardbody: {
+   alignItems: 'center',
+   marginBottom:20,
+
+ },
+
+ textbox:{
+   marginBottom:10,
+   borderRadius: 10,
+   textAlign: 'center',
+   color: 'black',
+   fontSize: 20,
+ },
+ 
+ requestecardButtoncontainer:{
+   alignItems: 'center'
+ },
+ submitbtn:{
+   backgroundColor: '#09bb11'
+ },
+ nombre : {
+  fontSize: 20,
+   fontFamily: "Times New Roman",
+  marginTop: 10
+ },
+
+ dateselector: {
+  display: 'flex',
+  marginBottom: 10
+
+ },
+ 
+ dateselectorDay: {
+  float: 'left'
+
+ },
+
+ dateselectorNum: {
+  float: 'rigth'
+ },
+
+ dateDay:{
+  textAlign: "center",
+  width: 80,
+  height:30,
+  marginRight: 55,
+  borderRadius: 5
+ },
+
+ dateNum:{
+  textAlign:'center',
+  height: 30,
+  width: 70,
+  marginLeft: 85,
+  marginTop: -30,
+  borderRadius: 5
+ }
+
+
+});
+
+const Admvielist = StyleSheet.create({
+ centeredView: {
+   flex: 1,
+   justifyContent: 'center',
+   alignItems: 'center',
+ },
+ card:{
+   marginBottom: 10,
+   shadowColor: '#000',
+   borderRadius: 20,
+   
+   shadowOffset: {
+     width: 0,
+     height: 0.10,
+   },
+
+   shadowOpacity: 0.25,
+   shadowRadius: 5,
+   elevation: 4,
+   backgroundColor: 'white',
+ },
+
+ list:{
+   borderRadius: 10,
+   marginTop: 10
+
+ },
+
+ listext:{
+   fontFamily: 'Times New Roman',
+   fontSize: 26,
+   textAlign: 'center',
+ },
+ btnsuceed:{
+   textAlign: 'center',
+   marginTop: 10,
+   borderRadius: 20,
+   padding: 10,
+   elevation: 2,
+   backgroundColor: 'green'
+ },
+ btncancel:{
+   textAlign: 'center',
+   marginTop: 10,
+   borderRadius: 20,
+   padding: 10,
+   elevation: 2,
+   backgroundColor: 'red'
+ },
+})
+
+const styles = StyleSheet.create({
+ container: {
+   flex: 1,
+   backgroundColor: '#fff',
+   alignItems: 'center',
+   justifyContent: 'center',
+ },
+});
+
+const LoaddingScreen = StyleSheet.create(
+ {
+   View : {
+     Color: '#9D1039',
+     textAlign: 'center',
+     fontWeight: 20
+   }
+ }
+);
+
+
+export default App;
