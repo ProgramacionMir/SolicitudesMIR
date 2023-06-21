@@ -1,3 +1,9 @@
+https://stackoverflow.com/questions/61447303/how-to-make-a-form-in-react-native
+https://www.youtube.com/watch?v=OR6AV9yJPoM
+https://www.react-hook-form.com/api/useform/
+https://see.stanford.edu/Course/CS223A/20
+https://snack.expo.dev/rAsJ44p1b
+https://www.emailjs.com/docs/examples/reactjs/
 import React, { useState, useRef } from 'react';
 import {ActivityIndicator,Image, Dimensions, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View,FlatList, Alert, Button } from 'react-native';
 
